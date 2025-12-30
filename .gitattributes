@@ -1,0 +1,2 @@
+# Git LFS 配置 - 跟踪所有 zip 文件
+*.zip filter=lfs diff=lfs merge=lfs -text
