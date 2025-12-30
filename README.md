@@ -9,6 +9,7 @@ This is the official code repository for the paper "Bridging the BIM-to-Scan Gap
 - [Installation](#installation)
 - [Data Preparation](#data-preparation)
 - [Usage](#usage)
+- [Virtual Scan Simulator](#virtual-scan-simulator)
 - [Project Structure](#project-structure)
 - [Framework Overview](#framework-overview)
 
@@ -16,7 +17,7 @@ This is the official code repository for the paper "Bridging the BIM-to-Scan Gap
 
 This project proposes a domain adaptation framework for point cloud semantic segmentation, aiming to bridge the domain gap between synthetic data generated from BIM (Building Information Modeling) and real scanned point clouds. Key features include:
 
-- **Physically Grounded Virtual Scanning**: Generate realistic synthetic point cloud data from CAD models
+- **Physically Grounded Virtual Scanning**: Generate realistic synthetic point cloud data from CAD models using our advanced virtual scan simulator (`tools/virtual_scan_simulator.py`). This tool simulates near-realistic LiDAR scanning effects, including occlusion simulation, multi-sensor intelligent layout, range noise, and random dropout, to bridge the gap between synthetic BIM data and real scanned point clouds.
 - **Hierarchical Domain Adaptation**: Use multi-level adversarial training to bridge domain gaps
 - **Attention Mechanisms**: Combine Point Transformer for powerful feature extraction
 - **Unsupervised Learning**: Perform domain adaptation on target domain without annotations
@@ -55,8 +56,10 @@ pip install torch==1.12.1+cu116 torchvision==0.13.1+cu116 --extra-index-url http
 ### 4. Install Other Dependencies
 
 ```bash
-pip install numpy scikit-learn matplotlib tqdm pyyaml torch-points-kernels
+pip install numpy scikit-learn matplotlib tqdm pyyaml torch-points-kernels open3d
 ```
+
+**Note**: `open3d` is required for the virtual scan simulator tool.
 
 ### 5. Compile CUDA Extensions
 
@@ -199,6 +202,65 @@ log/sem_seg/<log_dir>/
 └── *.pth              # Model checkpoints
 ```
 
+## Virtual Scan Simulator
+
+The `tools/virtual_scan_simulator.py` is a crucial tool for generating realistic synthetic point cloud data that closely mimics real LiDAR scanning effects. This tool is essential for bridging the domain gap between synthetic BIM data and real scanned point clouds.
+
+### Features
+
+- **Multi-Sensor Intelligent Layout**: Automatically plan optimal sensor positions for maximum coverage
+- **Occlusion Simulation**: Precise ray-casting based occlusion detection using 3D voxel grids
+- **Realistic Noise Simulation**: Add range noise and random dropout to simulate real sensor imperfections
+- **Configurable Parameters**: Support for different LiDAR configurations (standard, high-resolution, indoor)
+- **Batch Processing**: Process multiple point cloud files with resume functionality
+
+### Basic Usage
+
+Generate virtual scans from point cloud data:
+
+```bash
+cd tools
+python virtual_scan_simulator.py \
+    --input ../data/bim_indoor3d \
+    --output ../data/bim_scan \
+    --preset standard_lidar \
+    --output_format ply \
+    --max_sensors 6 \
+    --min_coverage_threshold 0.85 \
+    --voxel_size 0.05 \
+    --max_range 10.0 \
+    --fov_horizontal 360.0 \
+    --fov_vertical 300.0 \
+    --sensor_height 1.5 \
+    --resume
+```
+
+### Key Parameters
+
+- `--input`: Input point cloud folder or file path
+- `--output`: Output directory for simulated scan results
+- `--preset`: Preset configuration (`standard_lidar`, `high_resolution`, `indoor`)
+- `--output_format`: Output format (`ply`, `pcd`, `txt`, `npy`)
+- `--max_sensors`: Maximum number of sensors for multi-sensor layout
+- `--min_coverage_threshold`: Minimum coverage threshold (0.0-1.0)
+- `--voxel_size`: Voxel size for occlusion simulation
+- `--max_range`: Maximum scan range in meters
+- `--fov_horizontal`: Horizontal field of view in degrees
+- `--fov_vertical`: Vertical field of view in degrees
+- `--sensor_height`: Sensor height in meters
+- `--resume`: Enable resume functionality to skip already processed files
+
+### Advanced Features
+
+- **Iterative Optimization**: Dynamically adjust sensor positions based on actual scan results
+- **Multi-Processing**: Parallel processing of multiple files
+- **Resume Support**: Automatically skip already processed files
+
+For more details, see the tool's help:
+```bash
+python tools/virtual_scan_simulator.py --help
+```
+
 ## Project Structure
 
 ```
@@ -229,6 +291,8 @@ domain_adaptation/
 │   └── pointgroup_ops/          # Point group operations CUDA extension
 ├── baseline/                   # Baseline method implementations
 ├── tools/                      # Auxiliary tools
+│   ├── virtual_scan_simulator.py  # Multi-sensor virtual scan simulator (generates realistic synthetic scans)
+│   └── view_npy_pointcloud.py     # Point cloud visualization tool
 ├── cfgs/                       # Configuration files
 │   └── bim_config.yaml         # BIM configuration
 ├── figure/                     # Image resources
@@ -245,6 +309,11 @@ The framework consists of two main stages:
 ### 1. Realistic Source Data Synthesis
 
 Generate realistic synthetic point cloud data from CAD models:
+- **Virtual Scan Simulation**: Use `tools/virtual_scan_simulator.py` to simulate near-realistic LiDAR scanning effects, including:
+  - Multi-sensor intelligent layout planning
+  - Ray-casting based occlusion detection
+  - Range noise and random dropout simulation
+  - Configurable sensor parameters (FOV, resolution, range)
 - **Textured Point Cloud Generation**: Generate point clouds with realistic textures
 - **Semantic Annotation**: Automatically generate semantic labels
 
