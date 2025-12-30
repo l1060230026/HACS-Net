@@ -11,7 +11,6 @@ This is the official code repository for the paper "Bridging the BIM-to-Scan Gap
 - [Usage](#usage)
 - [Project Structure](#project-structure)
 - [Framework Overview](#framework-overview)
-- [Citation](#citation)
 
 ## Introduction
 
@@ -319,29 +318,6 @@ For detailed description, please refer to `figure/image.png`.
 - Increase `--warmup_epochs`
 - Adjust learning rate
 - Check data quality
-
-## Citation
-
-If you use this code, please cite the original paper:
-
-```bibtex
-@article{your_paper_2024,
-  title={Bridging the BIM-to-Scan Gap: Physically Grounded Virtual Scanning and Hierarchical Unsupervised Domain Adaptation for Point Cloud Semantic Segmentation},
-  author={Your Authors},
-  journal={Your Journal},
-  year={2024}
-}
-```
-
-## License
-
-[Please add license information as appropriate]
-
-## Contact
-
-For questions or suggestions, please contact via:
-- Submit an Issue
-- [Other contact methods]
 
 ---
 
