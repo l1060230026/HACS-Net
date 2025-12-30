@@ -1,0 +1,44 @@
+tacm:
+  enabled: true
+
+  # 立方体分割参数 (x, y, z) - 保守的分割
+  split: [2, 2, 1]
+
+  # TACM应用概率 - 适中的应用频率
+  p: 0.5
+
+  # 立方体混合比例 - 保守的混合
+  mix_ratio: 0.5
+
+  # 立方体置换设置
+  permute_cuboid:
+    enabled: true
+    p: 0.5
+
+  # 立方体队列设置 (可选功能)
+  cuboid_queue:
+    enabled: False
+    size: 20
+    num_cuboid: 1   # 每个场景的立方体数量
+    num_class: 3     # 用于采样的尾类数量
+    update_class_ratio: true
+
+# 伪标签生成配置
+pseudo_labels:
+  # 批处理大小
+  batch_size: 4
+  
+  # 设备设置
+  device: 'cuda'
+  
+  # 生成频率 - 适中的更新频率
+  frequency: 5
+  
+  # 阈值模式: 可选 'global' 或 'class'
+  threshold_mode: 'global'
+  
+  # 全局置信度阈值 - 适中的阈值
+  global_confidence_threshold: 0.7
+  
+  # 每类比例阈值 - 适中的保留比例
+  class_ratio_thresholds: [0.3]

@@ -1,0 +1,7 @@
+Area_1/conference_1(A6)/Annotations
+Area_1/hallway_4/Annotations
+Area_1/office_6/Annotations
+Area_1/office_8/Annotations
+Area_1/office_10/Annotations
+Area_1/office_11/Annotations
+Area_1/office_17/Annotations
